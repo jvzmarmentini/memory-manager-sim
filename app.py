@@ -1,13 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import math
-import argparse
-
-
-class Process:
-    def __init__(self, pid, size):
-        self.pid = pid
-        self.size = size
+from Process import Process
+from Colors import bcolors
 
 
 def partFix(memSize=32, part=4):
@@ -18,9 +13,13 @@ def partFix(memSize=32, part=4):
             if("IN" in line):
                 line = "".join(line.split()).split("IN(", 1)[1].split(")")[0]
                 pid, size = line.split(",")
-                proc = Process(pid, int(size))
-                print(f"IN: {pid=}, {size=}")
-                if (int(size) <= part):
+                proc = Process(pid, size)
+                print(f"IN: {proc}")
+                if(proc.size > part or None not in mem):
+                    print(
+                        f"{bcolors.FAIL}!!Espaco insuficiente de memoria{bcolors.ENDC}")
+                    continue
+                if (proc.size <= part):
                     for t, p in enumerate(mem):
                         if(p == None):
                             mem[t] = proc
@@ -29,17 +28,17 @@ def partFix(memSize=32, part=4):
                 pid = line.split("OUT(", 1)[1].split(")")[0]
                 print(f"OUT: {pid=}")
                 for t, p in enumerate(mem):
-                    if(p != None):
-                        if(p.pid == pid):
-                            mem[t] = None
-                            break
+                    if(p == pid):
+                        mem[t] = None
+                        break
 
-            print("|", end="")
+            print(f"|", end="")
             for p in mem:
                 if(p == None):
                     print("*"*part, end="|")
                     continue
-                print(f"{p.pid*p.size}{'*'*(part-p.size)}", end="|")
+                print(
+                    f"{bcolors.OKGREEN}{p.pid*p.size}{'*'*(part-p.size)}{bcolors.ENDC}", end="|")
             print()
     return 0
 
@@ -49,7 +48,7 @@ def main():
     """ Main program """
     opt = input("estrategia de alocacao [f, v, b]: ")
 
-    while(mem):
+    while(True):
         mem = int(input("tamanho da memoria: "))
         if (math.ceil(math.log2(mem)) == math.floor(math.log2(mem))):
             break
