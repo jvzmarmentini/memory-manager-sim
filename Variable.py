@@ -16,11 +16,12 @@ class Node:
 
 
 class LinkedList:
-    def __init__(self, nodes=None, memSize=9):
+    def __init__(self, memSize):
         self.head = Node(Process(None, memSize))
         self.tail = self.head
 
     def __str__(self):
+        print("hero")
         node = self.head
         nodes = []
         while node is not None:
@@ -38,8 +39,11 @@ class LinkedList:
         self.head.data.size -= node.data.size
         node.next = self.head
         self.head = node
+        return print(self)
 
-    def add(self, n):
+    def add(self, p):
+        n = Node(p)
+
         if self.head == self.tail:
             return self.__add(n)
 
@@ -49,69 +53,39 @@ class LinkedList:
                 prev_node.next = n
                 n.next = node
                 node.data.size -= n.size
-                return
+                return print(self)
             prev_node = node
 
     def remove(self, n):
         for node in self:
             if node.data == n:
                 node.data.pid = None
-                return
-
-    # def remove(self, n):
-    #     if self.head == n:
-    #         self.head = self.head.next
-    #         return
-
-    #     previous_node = self.head
-    #     for node in self:
-    #         if node.data == n:
-    #             previous_node.next = node.next
-    #             return
-    #         previous_node = node
-
-    #     raise Exception("Node with pid '%s' not found" % n)
-
-
-llist = LinkedList()
-print(llist)
-llist.add(Node(Process("A", 3)))
-print(llist)
-llist.add(Node(Process("B", 3)))
-print(llist)
-llist.add(Node(Process("C", 1)))
-print(llist)
-llist.add(Node(Process("D", 2)))
-print(llist)
-llist.remove("A")
-print(llist)
-llist.add(Node(Process("E", 2)))
-print(llist)
+                return print(self)
 
 
 class Variable:
     def __init__(self, memSize):
         self.memSize = memSize
-        # TODO: init empty linkedlist
+        self.mem = LinkedList(memSize)
 
     def __str__(self):
-        return ""
+        return mem
 
     def __in(self, p: Process) -> None:
         print(f"IN: {p}")
+        self.mem.add(p)
 
     def __out(self, pid: int) -> None:
         print(f"OUT: {pid}")
+        self.mem.remove(pid)
 
     def run(self, path: str) -> None:
         with open(path) as f:
             lines = f.readlines()
             for line in lines:
                 if("IN" in line):
-                    line = "".join(line.split()).split(
-                        "IN(", 1)[1].split(")")[0]
-                    pid, size = line.split(",")
+                    pid, size = line.split("IN(", 1)[1].split(")")[
+                        0].split(",")
                     self.__in(Process(pid, size))
                 else:
-                    pid = line.split("OUT(", 1)[1].split(")")[0]
-                    self.__out(pid)
+                    self.__out(line.split("OUT(", 1)[1].split(")")[0])

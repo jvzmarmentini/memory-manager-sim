@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import math
 from Fix import Fix
+from Variable import Variable
 
 
 def main():
@@ -26,8 +27,9 @@ def main():
         f = Fix(mem, part)
         f.run("input.txt")
     elif(opt.lower() == "v"):
-        policy = input("best fit ou worst fit [bf, wf]: ")
-        # TODO: particao variavel main
+        # policy = input("best fit ou worst fit [bf, wf]: ")
+        v = Variable(mem)
+        v.run("input.txt")
     elif(opt.lower() == "b"):
         return 1
         # TODO: buddy main

@@ -4,7 +4,7 @@ class Process:
         self.size = int(size)
 
     def __str__(self):
-        return f"{self.pid=}, {self.size=}"
+        return f"{self.pid}, {self.size}"
 
     def __eq__(self, other):
         if self.pid == None:
