@@ -9,7 +9,7 @@ class Node:
         self.next = None
 
     def __str__(self):
-        return '*'*self.data.size if self.data.pid == None else f"{bc.GREEN}{self.data.pid*self.data.size}{'*'*(self.size-self.data.size)}{bc.ENDC}"
+        return str(self.size) if self.data.pid == None else f"{bc.GREEN}{self.data.pid*self.data.size}{'*'*(self.size-self.data.size)}{bc.ENDC}"
 
     def __eq__(self, other):
         return self.data.pid == other
@@ -21,7 +21,6 @@ class LinkedList:
         self.tail = self.head
 
     def __str__(self):
-        print("hero")
         node = self.head
         nodes = []
         while node is not None:
@@ -42,19 +41,29 @@ class LinkedList:
         return print(self)
 
     def add(self, p):
-        n = Node(p)
+        new = Node(p)
+        prev = self.head
 
-        if self.head == self.tail:
-            return self.__add(n)
+        for cur in self:
+            if cur == None:
+                if new.size < cur.size:
+                    cur.size -= new.size
+                    new.next = cur
+                    if self.head == self.tail:
+                        self.head = new
+                    else:
+                        prev.next = new
+                    return print(self)
+                elif new.size == cur.size:
+                    new.next = cur.next
+                    if self.head == self.tail:
+                        self.head = new
+                    else:
+                        prev.next = new
+                    return print(self)
+            prev = cur
 
-        prev_node = self.head
-        for node in self:
-            if node == None and node.data.size >= n.data.size:
-                prev_node.next = n
-                n.next = node
-                node.data.size -= n.size
-                return print(self)
-            prev_node = node
+        return print(f"{bc.FAIL}!!Espaco insuficiente de memoria{bc.ENDC}")
 
     def remove(self, n):
         for node in self:
