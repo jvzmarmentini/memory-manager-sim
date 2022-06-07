@@ -19,10 +19,10 @@ def main():
 
     if(opt.lower() == "f"):
         while(True):
-            part = int(input("tamanho da particao: "))
+            part = int(input("Tamanho da particao: "))
             if (mem % part == 0):
                 break
-            print("numero deve ser divisivel pelo tamanho da memoria!!")
+            print("!!Numero deve ser divisivel pelo tamanho da memoria")
         f = Fix(mem, part)
         f.run("input.txt")
     elif(opt.lower() == "v"):
