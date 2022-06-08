@@ -4,13 +4,12 @@ from utils.Colors import bc
 
 class Node:
     def __init__(self, data: Process):
-        self.size = data.size
         self.data = data
         self.next = None
         self.prev = None
 
     def __str__(self) -> str:
-        return str(self.size) if self.data.pid == None else f"{bc.GREEN}{self.data.pid*self.data.size}{bc.ENDC}"
+        return str(self.data.size) if self.data.pid == None else f"{bc.GREEN}{self.data.pid*self.data.size}{bc.ENDC}"
 
     def __eq__(self, other: int) -> bool:
         return self.data.pid == other
@@ -48,13 +47,13 @@ class DoublyLinkedList:
 
         for cur in self:
             if cur == None:
-                if new.size < cur.size:
-                    cur.size -= new.size
+                if new.data.size < cur.data.size:
+                    cur.data.size -= new.data.size
                     new.prev = cur.prev
                     new.next = cur
                     cur.prev = new
                     return self.__add(new, prev)
-                elif new.size == cur.size:
+                elif new.data.size == cur.data.size:
                     new.next = cur.next
                     new.prev = cur.prev
                     return self.__add(new, prev)
@@ -67,23 +66,25 @@ class DoublyLinkedList:
             if node.data.pid == n:
                 node.data.pid = None
                 while True:
-                    if node.prev != self.head:
-                        if node.prev.data.pid == None:
+                    print(node, self)
+                    if node.prev is not None and node.prev.data.pid is None:
+                        if(node != self.tail):
                             node.next.prev = node.prev
+                        else:
+                            self.tail = node.prev
+                        node.prev.next = node.next
+                        node.prev.data.size += node.data.size
+                        node = node.prev
+                        continue
+                    if node.next is not None and node.next.data.pid is None:
+                        node.next.prev = node.prev
+                        if(node != self.head):
                             node.prev.next = node.next
-                            node.prev.size += node.size
-                            node = node.prev
-                            continue
-                    print(f"{node.next=}")
-                    print(f"{self.tail.next=}")
-                    print(f"{node.next == self.tail.next=}")
-                    if node.next != self.tail.next:
-                        if node.next.data.pid == None:
-                            node.next.prev = node.prev
-                            node.prev.next = node.next
-                            node.next.size += node.size
-                            node = node.next
-                            continue
+                        else:
+                            self.head = node.next
+                        node.next.data.size += node.data.size
+                        node = node.next
+                        continue
                     break
                 return print(self)
 
@@ -94,7 +95,7 @@ class Variable:
         self.mem = DoublyLinkedList(memSize)
 
     def __str__(self):
-        return mem
+        return self.mem
 
     def __in(self, p: Process) -> None:
         print(f"IN: {p}")
