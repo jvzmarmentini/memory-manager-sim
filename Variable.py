@@ -66,24 +66,26 @@ class DoublyLinkedList:
             if node.data.pid == n:
                 node.data.pid = None
                 while True:
-                    print(node, self)
+                    print(node.prev, node, node.next)
                     if node.prev is not None and node.prev.data.pid is None:
-                        if(node != self.tail):
+                        node.prev.next = node.next
+                        if(node is not self.tail):
                             node.next.prev = node.prev
                         else:
                             self.tail = node.prev
-                        node.prev.next = node.next
                         node.prev.data.size += node.data.size
                         node = node.prev
+                        print(self)
                         continue
                     if node.next is not None and node.next.data.pid is None:
                         node.next.prev = node.prev
-                        if(node != self.head):
+                        if(node is not self.head):
                             node.prev.next = node.next
                         else:
                             self.head = node.next
                         node.next.data.size += node.data.size
                         node = node.next
+                        print(self)
                         continue
                     break
                 return print(self)
