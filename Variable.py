@@ -64,9 +64,24 @@ class DoublyLinkedList:
 
     def remove(self, n: int) -> None:
         for node in self:
-            if node.data == n:
+            if node.data.pid == n:
                 node.data.pid = None
-                # TODO balance dll neighbours after remove
+                while True:
+                    if node.prev != self.head:
+                        if node.prev.data.pid == None:
+                            node.prev.next = node.next
+                            node.prev.size += node.size
+                            node = node.prev
+                            print(self)
+                            continue
+                    if node.next != self.tail:
+                        if node.next.data.pid == None:
+                            node.next.prev = node.prev
+                            node.next.size += node.size
+                            node = node.next
+                            print(self)
+                            continue
+                    break
                 return print(self)
 
 
