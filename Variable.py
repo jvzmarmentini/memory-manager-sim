@@ -9,19 +9,19 @@ class Node:
         self.next = None
         self.prev = None
 
-    def __str__(self):
+    def __str__(self) -> str:
         return str(self.size) if self.data.pid == None else f"{bc.GREEN}{self.data.pid*self.data.size}{bc.ENDC}"
 
-    def __eq__(self, other):
+    def __eq__(self, other: int) -> bool:
         return self.data.pid == other
 
 
 class DoublyLinkedList:
-    def __init__(self, memSize):
+    def __init__(self, memSize: int):
         self.head = Node(Process(None, memSize))
         self.tail = self.head
 
-    def __str__(self):
+    def __str__(self) -> str:
         node = self.head
         nodes = []
         while node is not None:
@@ -35,14 +35,14 @@ class DoublyLinkedList:
             yield node
             node = node.next
 
-    def __add(self, n, p):
+    def __add(self, n: Process, p: Process) -> None:
         if self.head == self.tail:
             self.head = n
         else:
             p.next = n
         return print(self)
 
-    def add(self, p):
+    def add(self, p: Process) -> None:
         new = Node(p)
         prev = self.head
 
@@ -62,10 +62,11 @@ class DoublyLinkedList:
 
         return print(f"{bc.FAIL}!!Espaco insuficiente de memoria{bc.ENDC}")
 
-    def remove(self, n):
+    def remove(self, n: int) -> None:
         for node in self:
             if node.data == n:
                 node.data.pid = None
+                # TODO balance dll neighbours after remove
                 return print(self)
 
 
