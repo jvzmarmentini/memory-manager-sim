@@ -7,15 +7,16 @@ class Node:
         self.size = data.size
         self.data = data
         self.next = None
+        self.prev = None
 
     def __str__(self):
-        return str(self.size) if self.data.pid == None else f"{bc.GREEN}{self.data.pid*self.data.size}{'*'*(self.size-self.data.size)}{bc.ENDC}"
+        return str(self.size) if self.data.pid == None else f"{bc.GREEN}{self.data.pid*self.data.size}{bc.ENDC}"
 
     def __eq__(self, other):
         return self.data.pid == other
 
 
-class LinkedList:
+class DoublyLinkedList:
     def __init__(self, memSize):
         self.head = Node(Process(None, memSize))
         self.tail = self.head
@@ -26,7 +27,7 @@ class LinkedList:
         while node is not None:
             nodes.append(str(node))
             node = node.next
-        return "->".join(nodes)
+        return "<=>".join(nodes)
 
     def __iter__(self):
         node = self.head
@@ -34,10 +35,11 @@ class LinkedList:
             yield node
             node = node.next
 
-    def __add(self, node):
-        self.head.data.size -= node.data.size
-        node.next = self.head
-        self.head = node
+    def __add(self, n, p):
+        if self.head == self.tail:
+            self.head = n
+        else:
+            p.next = n
         return print(self)
 
     def add(self, p):
@@ -48,19 +50,14 @@ class LinkedList:
             if cur == None:
                 if new.size < cur.size:
                     cur.size -= new.size
+                    new.prev = cur.prev
                     new.next = cur
-                    if self.head == self.tail:
-                        self.head = new
-                    else:
-                        prev.next = new
-                    return print(self)
+                    cur.prev = new
+                    return self.__add(new, prev)
                 elif new.size == cur.size:
                     new.next = cur.next
-                    if self.head == self.tail:
-                        self.head = new
-                    else:
-                        prev.next = new
-                    return print(self)
+                    new.prev = cur.prev
+                    return self.__add(new, prev)
             prev = cur
 
         return print(f"{bc.FAIL}!!Espaco insuficiente de memoria{bc.ENDC}")
@@ -75,7 +72,7 @@ class LinkedList:
 class Variable:
     def __init__(self, memSize):
         self.memSize = memSize
-        self.mem = LinkedList(memSize)
+        self.mem = DoublyLinkedList(memSize)
 
     def __str__(self):
         return mem
