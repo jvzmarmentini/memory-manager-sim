@@ -14,6 +14,9 @@ class Node:
     def __eq__(self, other: int) -> bool:
         return self.data.pid == other
 
+    def isNone(self) -> bool:
+        return self.data.pid is None
+
 
 class DoublyLinkedList:
     def __init__(self, memSize: int):
@@ -67,22 +70,24 @@ class DoublyLinkedList:
                 node.data.pid = None
                 while True:
                     print(node.prev, node, node.next)
-                    if node.prev is not None and node.prev.data.pid is None:
-                        node.prev.next = node.next
+                    if node is not self.head and node.prev.isNone():
                         if(node is not self.tail):
+                            node.prev.next = node.next
                             node.next.prev = node.prev
                         else:
                             self.tail = node.prev
+                            node.prev.next = None
                         node.prev.data.size += node.data.size
                         node = node.prev
                         print(self)
                         continue
-                    if node.next is not None and node.next.data.pid is None:
-                        node.next.prev = node.prev
+                    if node is not self.tail and node.next.isNone():
                         if(node is not self.head):
                             node.prev.next = node.next
+                            node.next.prev = node.prev
                         else:
                             self.head = node.next
+                            node.next.prev = None
                         node.next.data.size += node.data.size
                         node = node.next
                         print(self)
