@@ -69,17 +69,20 @@ class DoublyLinkedList:
                 while True:
                     if node.prev != self.head:
                         if node.prev.data.pid == None:
+                            node.next.prev = node.prev
                             node.prev.next = node.next
                             node.prev.size += node.size
                             node = node.prev
-                            print(self)
                             continue
-                    if node.next != self.tail:
+                    print(f"{node.next=}")
+                    print(f"{self.tail.next=}")
+                    print(f"{node.next == self.tail.next=}")
+                    if node.next != self.tail.next:
                         if node.next.data.pid == None:
                             node.next.prev = node.prev
+                            node.prev.next = node.next
                             node.next.size += node.size
                             node = node.next
-                            print(self)
                             continue
                     break
                 return print(self)
