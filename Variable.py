@@ -37,29 +37,31 @@ class DoublyLinkedList:
             yield node
             node = node.next
 
-    def __add(self, n: Process, p: Process) -> None:
-        if self.head == self.tail:
-            self.head = n
-        else:
-            p.next = n
-        return print(self)
-
     def add(self, p: Process) -> None:
         new = Node(p)
         prev = self.head
 
         for cur in self:
-            if cur == None:
+            if cur.data.pid is None:
                 if new.data.size < cur.data.size:
                     cur.data.size -= new.data.size
                     new.prev = cur.prev
                     new.next = cur
                     cur.prev = new
-                    return self.__add(new, prev)
+                    if cur is self.head:
+                        self.head = new
+                    else:
+                        prev.next = new
+                    return print(self)
                 elif new.data.size == cur.data.size:
                     new.next = cur.next
                     new.prev = cur.prev
-                    return self.__add(new, prev)
+                    cur.next.prev = new
+                    if cur is self.head:
+                        self.head = new
+                    else:
+                        prev.next = new
+                    return print(self)
             prev = cur
 
         return print(f"{bc.FAIL}!!Espaco insuficiente de memoria{bc.ENDC}")
@@ -69,7 +71,6 @@ class DoublyLinkedList:
             if node.data.pid == n:
                 node.data.pid = None
                 while True:
-                    print(node.prev, node, node.next)
                     if node is not self.head and node.prev.isNone():
                         if(node is not self.tail):
                             node.prev.next = node.next
@@ -79,7 +80,6 @@ class DoublyLinkedList:
                             node.prev.next = None
                         node.prev.data.size += node.data.size
                         node = node.prev
-                        print(self)
                         continue
                     if node is not self.tail and node.next.isNone():
                         if(node is not self.head):
@@ -90,7 +90,6 @@ class DoublyLinkedList:
                             node.next.prev = None
                         node.next.data.size += node.data.size
                         node = node.next
-                        print(self)
                         continue
                     break
                 return print(self)
