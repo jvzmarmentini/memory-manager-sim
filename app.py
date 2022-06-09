@@ -27,8 +27,8 @@ def main():
         f = Fix(mem, part)
         f.run("input.txt")
     elif(opt.lower() == "v"):
-        # policy = input("best fit ou worst fit [bf, wf]: ")
-        v = Variable(mem)
+        policy = input("best fit ou worst fit [bf, wf]: ")
+        v = Variable(mem, policy)
         v.run("input.txt")
     elif(opt.lower() == "b"):
         return 1

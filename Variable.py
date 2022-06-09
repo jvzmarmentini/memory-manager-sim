@@ -22,6 +22,9 @@ class Node:
     def isHole(self) -> bool:
         return self.data.pid is None
 
+    def size(self) -> int:
+        return self.data.size
+
 
 class DoublyLinkedList:
     def __init__(self, memSize: int):
@@ -42,51 +45,42 @@ class DoublyLinkedList:
             yield node
             node = node.next
 
-    def bestfit(self, p: Process) -> None:
+    def fit(self, p: Process, b: bool) -> None:
         new = Node(p)
         cprev = self.head
-        bestfit = None
+        fit = None
 
         for cur in self:
-            if cur.isHole():
-                if new.data.size == cur.data.size:
-                    # * prev neighour node
-                    new.prev = cur.prev
-                    if cur is self.head:
-                        self.head = new
-                    else:
-                        cur.prev.next = new
-
-                    # * next neighour node
-                    new.next = cur.next
-                    if cur is self.tail:
-                        self.tail = new
-                    else:
-                        cur.next.prev = new
-
-                    return self
-                if new.data.size < cur.data.size:
-                    # * init best fit
-                    if bestfit is None:
-                        bestfit = cur
-                        continue
-
-                    # * check if is the best fit
-                    if bestfit.data.size - new.data.size > cur.data.size - new.data.size:
-                        bestfit = cur
+            if cur.isHole() and new.size() <= cur.size():
+                if fit is None:
+                    fit = cur
+                    continue
+                if b:
+                    if not b ^ bool(fit.size() > cur.size()):
+                        fit = cur
             cprev = cur
 
-        if bestfit is None:
+        if fit is None:
             raise MemoryOverflowException
 
-        bestfit.data.size -= new.data.size
-        new.prev = bestfit.prev
-        new.next = bestfit
-        if bestfit is self.head:
+        if fit is self.head:
             self.head = new
         else:
-            bestfit.prev.next = new
-        bestfit.prev = new
+            fit.prev.next = new
+        new.prev = fit.prev
+
+        if new.data.size == fit.data.size:
+            if fit is self.tail:
+                self.tail = new
+            else:
+                fit.next.prev = new
+            new.next = fit.next
+            # ? del fit
+            return self
+
+        fit.data.size -= new.data.size
+        new.next = fit
+        fit.prev = new
 
         return self
 
@@ -157,17 +151,19 @@ class DoublyLinkedList:
 
 
 class Variable:
-    def __init__(self, memSize):
+    def __init__(self, memSize, fit):
         self.memSize = memSize
+        self.fit = fit
         self.mem = DoublyLinkedList(memSize)
 
     def __str__(self):
         return self.mem
 
     def __in(self, pid: int, size: int) -> None:
+        b = True if self.fit == "bf" else False
         p = Process(pid, size)
         print(f"IN: {p}")
-        return self.mem.bestfit(p)
+        return self.mem.fit(p, b)
 
     def __out(self, pid: int) -> None:
         print(f"OUT: {pid}")
