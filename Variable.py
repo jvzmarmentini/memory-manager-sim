@@ -1,3 +1,4 @@
+from typing import Self
 from Process import Process
 from utils.Colors import bc
 
@@ -45,7 +46,7 @@ class DoublyLinkedList:
             yield node
             node = node.next
 
-    def fit(self, p: Process, b: bool) -> None:
+    def fit(self, p: Process, b: bool) -> Self:
         new = Node(p)
         cprev = self.head
         fit = None
