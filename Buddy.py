@@ -15,34 +15,39 @@ class Node:
         self.left = None
         self.right = None
 
+    def split(self):
+        half = self.size // 2
+        self.left = Node(half)
+        self.right = Node(half)
+    
+    def isLeaft(self):
+        return True if self.left is None else False 
+
 
 class Tree:
     def __init__(self, memSize) -> None:
         self.root = Node(memSize)
 
-    def add(self, p: Process, f: Node = None) -> Self:
-        if f is None:
-            f = self.root
-
-        if f.flag > 0:
-            return None
-
-        if f.flag == 0:
-            if self.add(p, f.left) is not None:
-                return
-            if self.add(p, f.right) is not None:
-                return
-
+    def _add(self, p: Process, f: Node) -> Self:
         half = f.size // 2
-        if half // 2 > p.size:
-            f.left = Node(half)
-            f.left = Node(half)
-            f.flag = 0
-            self.add(p, f.left)
+        if f.isLeaf():
+            if p.size > half and p.size <= f.size:
+                f = p
+                return self
+            if p.size <= half:   
+                f.split()
+                return self._add(p, f.left)
         else:
-            f = p
-        # ! TODO change flags
-        return self
+            if isinstance(f.left, Node):
+                res = self._add(p, f.left)
+                if res is not None:
+                    return res
+            if isinstance(f.right, Node):
+                return self._add(p, f.right)
+        return None
+
+    def add(self, p: Process) -> Self:
+        return self._add(p, self.root)
 
     def remove() -> Self:
         pass
