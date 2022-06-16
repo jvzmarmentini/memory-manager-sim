@@ -1,4 +1,3 @@
-from typing import Self
 from Process import Process
 from utils.Colors import bc
 
@@ -15,26 +14,44 @@ class Node:
         self.left = None
         self.right = None
 
+    def __str__(self) -> str:
+        return str(self.size)
+
     def split(self):
         half = self.size // 2
         self.left = Node(half)
         self.right = Node(half)
-    
-    def isLeaft(self):
-        return True if self.left is None else False 
+
+    def isLeaf(self):
+        return True if self.left is None else False
 
 
 class Tree:
     def __init__(self, memSize) -> None:
         self.root = Node(memSize)
 
-    def _add(self, p: Process, f: Node) -> Self:
+    def __str__(self) -> str:
+        return self._straux(0, self.root)
+
+    def _straux(self, level, f):
+        ret = "\t"*level+repr(f.size)+"\n"
+        if isinstance(f.left, Node):
+            ret += self._straux(level+1, f.left)
+        else:
+            ret += "\t"*(1+level)+str(f.left)+"\n"
+        if isinstance(f.right, Node):
+            ret += self._straux(level+1, f.right)
+        else:
+            ret += "\t"*(1+level)+str(f.right)+"\n"
+        return ret
+
+    def _add(self, p: Process, f: Node):
         half = f.size // 2
         if f.isLeaf():
             if p.size > half and p.size <= f.size:
                 f = p
                 return self
-            if p.size <= half:   
+            if p.size <= half:
                 f.split()
                 return self._add(p, f.left)
         else:
@@ -46,15 +63,15 @@ class Tree:
                 return self._add(p, f.right)
         return None
 
-    def add(self, p: Process) -> Self:
+    def add(self, p: Process):
         return self._add(p, self.root)
 
-    def remove() -> Self:
+    def remove():
         pass
 
 
 class Buddy:
-    def __init__(self, memSize, fit):
+    def __init__(self, memSize):
         self.memSize = memSize
         self.mem = Tree(memSize)
 
@@ -78,6 +95,8 @@ class Buddy:
                     pid, size = line.split("IN(", 1)[1].split(")")[
                         0].split(",")
                     try:
+                        # import pdb
+                        # pdb.set_trace()
                         print(self.__in(pid, size))
                     except MemoryOverflowException as e:
                         print(e)

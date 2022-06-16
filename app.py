@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import math
+from Buddy import Buddy
 from Fix import Fix
 from Variable import Variable
 
@@ -29,10 +30,10 @@ def main():
     elif(opt.lower() == "v"):
         policy = input("best fit ou worst fit [bf, wf]: ")
         v = Variable(mem, policy)
-        v.run("input.txt")
+        v.run("input3.txt")
     elif(opt.lower() == "b"):
-        return 1
-        # TODO: buddy main
+        b = Buddy(mem)
+        b.run("input3.txt")
     return 0
 
 
