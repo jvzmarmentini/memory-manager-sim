@@ -7,72 +7,46 @@ class MemoryOverflowException(Exception):
         super().__init__(f"{bc.FAIL}!!Espaco insuficiente de memoria{bc.ENDC}")
 
 
-class Node:
-    def __init__(self, size) -> None:
-        self.size = size
-        self.parent = parent
-        self.left = left
-        self.right = right
-
-    def __str__(self) -> str:
-        return str(self.size)
-
-    def split(self):
-        half = self.size // 2
-        self.left = Node(half)
-        self.right = Node(half)
-
-    def isLeaf(self):
-        return True if self.left is None else False
-
-
 class Tree:
     def __init__(self, memSize) -> None:
-        self.root = Node(memSize)
+        self._tree = [None] * (memSize-1)
+        self._tree[0] = memSize
 
-    def __str__(self) -> str:
-        return self._straux(0, self.root)
+    def __str__(self, k=0, level=0):
+        if self._tree[k] is not None:
+            if 2*k+1 < len(self._tree):
+                self.__str__(2*k+1, level + 4)
+            print(level * ' ' + '-> ' + repr(self._tree[k]))
+            if 2*k+2 < len(self._tree):
+                self.__str__(2*k+2, level + 4)
+        return ""
 
-    def _straux(self, level, f):
-        ret = "\t"*level+repr(f.size)+"\n"
-        if isinstance(f.left, Node):
-            ret += self._straux(level+1, f.left)
-        else:
-            ret += "\t"*(1+level)+str(f.left)+"\n"
-        if isinstance(f.right, Node):
-            ret += self._straux(level+1, f.right)
-        else:
-            ret += "\t"*(1+level)+str(f.right)+"\n"
-        return ret
+    # ! test edge cases
+    def _add(self, p: Process, k: int):
+        if isinstance(self._tree[k], Process):
+            return None
 
-    def _add(self, p: Process, f: Node):
-        half = f.size // 2
-        if f.isLeaf():
-            if p.size > half and p.size <= f.size:
-                self.root = p
+        if self._tree[k] == 2 or p.size > self._tree[k] // 2:
+            if 2*k+1 >= len(self._tree) or self._tree[2*k+1] is None:
+                self._tree[k] = p
                 return self
+            return None
 
+        if self._tree[2*k+1] is None:
+            self._tree[2*k+1] = self._tree[2*k+2] = self._tree[k] // 2
 
-        if f.isLeaf():
-            if p.size > half and p.size <= f.size:
-                f = p
-                return self
-            if p.size <= half:
-                f.split()
-                return self._add(p, f.left)
-        else:
-            if isinstance(f.left, Node):
-                res = self._add(p, f.left)
-                if res is not None:
-                    return res
-            if isinstance(f.right, Node):
-                return self._add(p, f.right)
-        return None
+        if self._add(p, 2*k+1) is not None:
+            return self
+        return self._add(p, 2*k+2)
 
     def add(self, p: Process):
-        return self._add(p, self.root)
+        if p.size > self._tree[0]:
+            raise MemoryOverflowException
+        if self._add(p, 0) is None:
+            raise MemoryOverflowException
+        return self
 
-    def remove():
+    def remove(self, pid):
         pass
 
 

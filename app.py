@@ -30,10 +30,10 @@ def main():
     elif(opt.lower() == "v"):
         policy = input("best fit ou worst fit [bf, wf]: ")
         v = Variable(mem, policy)
-        v.run("input3.txt")
+        v.run("input.txt")
     elif(opt.lower() == "b"):
         b = Buddy(mem)
-        b.run("input3.txt")
+        b.run("input.txt")
     return 0
 
 

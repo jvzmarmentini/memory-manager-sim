@@ -1,3 +1,5 @@
-IN(A, 4)
-IN(B, 4)
-IN(C, 4)
+IN(A, 2)
+IN(B, 2)
+IN(C, 2)
+IN(D, 4)
+IN(E, 2)
