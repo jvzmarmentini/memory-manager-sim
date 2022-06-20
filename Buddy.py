@@ -9,10 +9,10 @@ class MemoryOverflowException(Exception):
 
 class Node:
     def __init__(self, size) -> None:
-        self.flag = -1
         self.size = size
-        self.left = None
-        self.right = None
+        self.parent = parent
+        self.left = left
+        self.right = right
 
     def __str__(self) -> str:
         return str(self.size)
@@ -47,6 +47,12 @@ class Tree:
 
     def _add(self, p: Process, f: Node):
         half = f.size // 2
+        if f.isLeaf():
+            if p.size > half and p.size <= f.size:
+                self.root = p
+                return self
+
+
         if f.isLeaf():
             if p.size > half and p.size <= f.size:
                 f = p
