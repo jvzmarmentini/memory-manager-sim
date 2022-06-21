@@ -1,10 +1,6 @@
 from Process import Process
 from utils.Colors import bc
-
-
-class MemoryOverflowException(Exception):
-    def __init__(self):
-        super().__init__(f"{bc.FAIL}!!Espaco insuficiente de memoria{bc.ENDC}")
+from utils.Exceptions import MemoryOverflowException, ProcessNotFoundException
 
 
 class Tree:
