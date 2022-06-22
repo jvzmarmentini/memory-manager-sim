@@ -8,14 +8,20 @@ class BinaryTree:
     def __init__(self, memSize) -> None:
         self._tree = [None] * (memSize-1)
         self._tree[0] = memSize
+        self._infrag = []
 
-    def __str__(self, k=0, level=0):
+    def _straux(self, k, level):
         if self._tree[k] is not None:
             if 2*k+1 < len(self._tree):
-                self.__str__(2*k+1, level+1)
+                self._straux(2*k+1, level+1)
             print(level * 2 * ' ' + '-> ' + repr(self._tree[k]))
             if 2*k+2 < len(self._tree):
-                self.__str__(2*k+2, level+1)
+                self._straux(2*k+2, level+1)
+
+    def __str__(self):
+        print(
+            f"Internal fragmentation: {self._infrag}" if self._infrag else "")
+        self._straux(0, 0)
         return ""
 
     def _hasChild(self, k):
@@ -35,6 +41,8 @@ class BinaryTree:
         if cur == 2 or p.size > cur // 2:
             if self._isFit(k):
                 self._tree[k] = p
+                if cur != p.size:
+                    self._infrag.append((p.pid, cur-p.size))
                 return self
             return None
 
@@ -66,10 +74,13 @@ class BinaryTree:
             res = self._remove(pid, leftIdx)
             if res is not None:
                 if res:
+                    self._infrag = list(
+                        filter(lambda t: t[0] != pid, self._infrag))
                     if not isinstance(self._tree[rightIdx], Process) and self._isFit(rightIdx):
                         self._tree[leftIdx] = self._tree[rightIdx] = None
                         return True
                     self._tree[leftIdx] = cur // 2
+
                 return False
         else:
             return None
