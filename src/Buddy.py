@@ -16,38 +16,39 @@ class Tree:
             print(level * 4 * ' ' + '-> ' + repr(self._tree[k]), end='')
             if isinstance(self._tree[k], Process):
                 r = self._tree[0]//2 ** level-self._tree[k].size
-                print(",", f"{bc.WARNING}{r}{bc.ENDC}") if r else print()
+                print(",", f"{r}") if r else print()
             else:
                 print()
             if 2*k+2 < len(self._tree):
                 self.__str__(2*k+2, level+1)
         return ""
 
-    def _isLeaf(self, k):
-        return 2*k+1 >= len(self._tree)
-
     def _hasChild(self, k):
         return self._tree[2*k+1] is not None
 
-    def _g(self, k):
-        return not self._isLeaf(k) and self._hasChild(k)
+    def _isFit(self, k):
+        return 2*k+1 >= len(self._tree) or not self._hasChild(k)
 
     def _add(self, p: Process, k: int):
-        if isinstance(self._tree[k], Process):
+        cur = self._tree[k]
+        leftIdx = 2*k+1
+        rightIdx = leftIdx+1
+
+        if isinstance(cur, Process):
             return None
 
-        if self._tree[k] == 2 or p.size > self._tree[k] // 2:
-            if 2*k+1 >= len(self._tree) or self._tree[2*k+1] is None:
+        if cur == 2 or p.size > cur // 2:
+            if self._isFit(k):
                 self._tree[k] = p
                 return self
             return None
 
-        if self._tree[2*k+1] is None:
-            self._tree[2*k+1] = self._tree[2*k+2] = self._tree[k] // 2
+        if not self._hasChild(k):
+            self._tree[leftIdx] = self._tree[rightIdx] = cur // 2
 
-        if self._add(p, 2*k+1) is not None:
+        if self._add(p, leftIdx) is not None:
             return self
-        return self._add(p, 2*k+2)
+        return self._add(p, rightIdx)
 
     def add(self, p: Process):
         if p.size > self._tree[0]:
@@ -57,38 +58,36 @@ class Tree:
         return self
 
     def _remove(self, pid, k):
-        if isinstance(self._tree[k], Process):
-            if self._tree[k].pid == pid:
+        cur = self._tree[k]
+        leftIdx = 2*k+1
+        rightIdx = leftIdx+1
+
+        if isinstance(cur, Process):
+            if cur.pid == pid:
                 return True
             return None
 
-        if self._g(k):
-            res = self._remove(pid, 2*k+1)
+        if not self._isFit(k):
+            res = self._remove(pid, leftIdx)
             if res is not None:
                 if res:
-                    if not isinstance(self._tree[2*k+2], Process) and not self._g(2*k+2):
-                        self._tree[2*k+1] = self._tree[2*k+2] = None
+                    if not isinstance(self._tree[rightIdx], Process) and self._isFit(rightIdx):
+                        self._tree[leftIdx] = self._tree[rightIdx] = None
                         return True
-                    else:
-                        self._tree[2*k+1] = self._tree[k] // 2
-                        return False
-                else:
-                    return False
+                    self._tree[leftIdx] = cur // 2
+                return False
         else:
             return None
 
-        if self._g(k):
-            res = self._remove(pid, 2*k+2)
+        if not self._isFit(k):
+            res = self._remove(pid, rightIdx)
             if res is not None:
                 if res:
-                    if not isinstance(self._tree[2*k+1], Process) and not self._g(2*k+1):
-                        self._tree[2*k+2] = self._tree[2*k+1] = None
+                    if not isinstance(self._tree[leftIdx], Process) and self._isFit(2*k+1):
+                        self._tree[rightIdx] = self._tree[leftIdx] = None
                         return True
-                    else:
-                        self._tree[2*k+2] = self._tree[k] // 2
-                        return False
-                else:
-                    return False
+                    self._tree[rightIdx] = cur // 2
+                return False
         return None
 
     def remove(self, pid):
