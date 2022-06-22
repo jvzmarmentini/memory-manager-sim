@@ -117,7 +117,7 @@ class Buddy:
         with open(path) as f:
             lines = f.readlines()
             for line in lines:
-                if("IN" in line):
+                if("IN(" in line):
                     pid, size = line.split("IN(", 1)[1].split(")")[
                         0].split(",")
                     try:
@@ -125,7 +125,7 @@ class Buddy:
                         print(self.__in(pid, size))
                     except MemoryOverflowException as e:
                         print(e)
-                else:
+                elif("OUT(" in line):
                     pid = line.split("OUT(", 1)[1].split(")")[0]
                     try:
                         # import pdb
@@ -133,3 +133,5 @@ class Buddy:
                         print(self.__out(pid))
                     except ProcessNotFoundException as e:
                         print(e)
+                else:
+                    continue
