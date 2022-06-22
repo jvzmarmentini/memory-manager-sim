@@ -1,10 +1,17 @@
 from Process import Process
 from utils.Colors import bc
 
+import math
+
 
 class MemoryOverflowException(Exception):
     def __init__(self):
         super().__init__(f"{bc.FAIL}!!Espaco insuficiente de memoria{bc.ENDC}")
+
+
+class ProcessNotFoundException(Exception):
+    def __init__(self, pid):
+        super().__init__(f"{bc.FAIL}!!PID {pid} nao encontrado{bc.ENDC}")
 
 
 class Tree:
@@ -15,11 +22,25 @@ class Tree:
     def __str__(self, k=0, level=0):
         if self._tree[k] is not None:
             if 2*k+1 < len(self._tree):
-                self.__str__(2*k+1, level + 4)
-            print(level * ' ' + '-> ' + repr(self._tree[k]))
+                self.__str__(2*k+1, level+1)
+            print(level * 4 * ' ' + '-> ' + repr(self._tree[k]), end='')
+            if isinstance(self._tree[k], Process):
+                r = self._tree[0]//2 ** level-self._tree[k].size
+                print(",", f"{bc.WARNING}{r}{bc.ENDC}") if r else print()
+            else:
+                print()
             if 2*k+2 < len(self._tree):
-                self.__str__(2*k+2, level + 4)
+                self.__str__(2*k+2, level+1)
         return ""
+
+    def _isLeaf(self, k):
+        return 2*k+1 >= len(self._tree)
+
+    def _hasChild(self, k):
+        return self._tree[2*k+1] is not None
+
+    def _g(self, k):
+        return not self._isLeaf(k) and self._hasChild(k)
 
     # ! test edge cases
     def _add(self, p: Process, k: int):
@@ -46,8 +67,46 @@ class Tree:
             raise MemoryOverflowException
         return self
 
+    # ! test edge cases
+    def _remove(self, pid, k):
+        if isinstance(self._tree[k], Process):
+            if self._tree[k].pid == pid:
+                return True
+            return None
+
+        if self._g(k):
+            res = self._remove(pid, 2*k+1)
+            if res is not None:
+                if res:
+                    if not isinstance(self._tree[2*k+2], Process) and not self._g(2*k+2):
+                        self._tree[2*k+1] = self._tree[2*k+2] = None
+                        return True
+                    else:
+                        self._tree[2*k+1] = self._tree[k] // 2
+                        return False
+                else:
+                    return False
+        else:
+            return None
+
+        if self._g(k):
+            res = self._remove(pid, 2*k+2)
+            if res is not None:
+                if res:
+                    if not isinstance(self._tree[2*k+1], Process) and not self._g(2*k+1):
+                        self._tree[2*k+2] = self._tree[2*k+1] = None
+                        return True
+                    else:
+                        self._tree[2*k+2] = self._tree[k] // 2
+                        return False
+                else:
+                    return False
+        return None
+
     def remove(self, pid):
-        pass
+        if self._remove(pid, 0) is None:
+            raise ProcessNotFoundException(pid)
+        return self
 
 
 class Buddy:
@@ -75,14 +134,15 @@ class Buddy:
                     pid, size = line.split("IN(", 1)[1].split(")")[
                         0].split(",")
                     try:
-                        # import pdb
-                        # pdb.set_trace()
+
                         print(self.__in(pid, size))
                     except MemoryOverflowException as e:
                         print(e)
                 else:
                     pid = line.split("OUT(", 1)[1].split(")")[0]
                     try:
+                        # import pdb
+                        # pdb.set_trace()
                         print(self.__out(pid))
-                    except ValueError as e:
+                    except ProcessNotFoundException as e:
                         print(e)
