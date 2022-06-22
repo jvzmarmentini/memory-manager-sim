@@ -1,10 +1,6 @@
 from Process import Process
 from utils.Colors import bc
-
-
-class MemoryOverflowException(Exception):
-    def __init__(self):
-        super().__init__(f"{bc.FAIL}!!Espaco insuficiente de memoria{bc.ENDC}")
+from utils.Exceptions import MemoryOverflowException, ProcessNotFoundException
 
 
 class Node:
@@ -142,12 +138,12 @@ class DoublyLinkedList:
                 continue
             return self
 
-    def remove(self, n: int) -> None:
+    def remove(self, pid: int) -> None:
         for node in self:
-            if node.data.pid == n:
+            if node.data.pid == pid:
                 node.data.pid = None
                 return self.__merge_neighbours(node)
-        raise ValueError(f"{bc.FAIL}!!PID nao encontrado{bc.ENDC}")
+        raise ProcessNotFoundException(pid)
 
 
 class Variable:
@@ -184,5 +180,5 @@ class Variable:
                     pid = line.split("OUT(", 1)[1].split(")")[0]
                     try:
                         print(self.__out(pid))
-                    except ValueError as e:
+                    except ProcessNotFoundException as e:
                         print(e)

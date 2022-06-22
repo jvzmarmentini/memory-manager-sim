@@ -1,5 +1,6 @@
 from Process import Process
 from utils.Colors import bc
+<<<<<<< HEAD
 
 import math
 
@@ -7,6 +8,9 @@ import math
 class MemoryOverflowException(Exception):
     def __init__(self):
         super().__init__(f"{bc.FAIL}!!Espaco insuficiente de memoria{bc.ENDC}")
+=======
+from utils.Exceptions import MemoryOverflowException, ProcessNotFoundException
+>>>>>>> d1fe13a37ab3cbadb178e9bbff4b12bb59467db6
 
 
 class ProcessNotFoundException(Exception):
