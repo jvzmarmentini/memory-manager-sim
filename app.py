@@ -11,14 +11,15 @@ from src.Variable import Variable
 def main():
     files = [f for f in listdir("./test") if isfile(join("./test", f))]
     while(True):
-        for cont,f in enumerate(files):
-            print("%d - %s"%(cont+1,f))
-        file = "test/"+files[int(input("Digite o arquivo que você deseja rodar: "))-1]
+        for cont, f in enumerate(files):
+            print("%d - %s" % (cont+1, f))
+        file = "test/" + \
+            files[int(input("Digite o arquivo que você deseja rodar: "))-1]
         if (isfile(file)):
             break
         print("!!Arquivo invalido")
     while(True):
-        opt = input("Estrategia de alocacao [f, v, b]: ")
+        opt = input("Estrategia de alocacao [f(ixa), v(ariavel), b(uddy)]: ")
         if (opt in "FfVvBb"):
             break
         print("!!Estrategia invalida")

@@ -1,24 +1,21 @@
 # memory-manager-sim
 
-https://moodle.pucrs.br/pluginfile.php/4232655/mod_resource/content/2/TP2.pdf?redirect=1
+simulador do gerenciador de memoria do sisop. foram implementadas tres estrategias de alocação, sendo elas partição fixa, partição variável e buddy.
 
-## processo
-cada processo é representado por um id e possui um tamanho
+## python version
 
-## partições fixas de mesmo tamanho
-in: tamanho da partição
+Python 3.10.5
 
-struct: array de nodos com tamanho fixo
+obs: **a principio** funciona em qualquer versão > 3.0, mas não foi testado
 
-## partições variáveis 
-in: política de alocação (best-fit ou worst-fit)
+## usage
 
-struct: linked list de nodos
-https://panda.ime.usp.br/panda/static/pythonds_pt/02-EDBasicos/ImplementinganUnorderedListLinkedLists.html
-https://realpython.com/linked-lists-python/
+o arquivo de instrução deve necessariamente estar no diretório test.
 
-## partições definidas com o sistema buddy
-in: -
+para adicionar um processo na memoria, insira conforme o padrão (case sensitive):
+"IN(PID, Size)"
 
-struct: arvore binaria nao balanceada
-https://stackoverflow.com/questions/2598437/how-to-implement-a-binary-tree
+para remover um processo da memoria, insira conforme o padrão (case sensitive):
+"OUT(PID)"
+
+run `python app.py`
