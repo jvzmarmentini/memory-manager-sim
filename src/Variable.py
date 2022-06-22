@@ -1,4 +1,5 @@
 from src.Process import Process
+from src.MemoryManagment import MemoryManagment
 from utils.Colors import bc
 from utils.Exceptions import MemoryOverflowException, ProcessNotFoundException
 
@@ -23,9 +24,10 @@ class Node:
 
 
 class DoublyLinkedList:
-    def __init__(self, memSize: int):
+    def __init__(self, memSize: int, strat):
         self.head = Node(Process(None, memSize))
         self.tail = self.head
+        self.strat = True if strat == "bf" else False
 
     def __str__(self) -> str:
         node = self.head
@@ -41,7 +43,7 @@ class DoublyLinkedList:
             yield node
             node = node.next
 
-    def fit(self, p: Process, b: bool):
+    def add(self, p: Process):
         new = Node(p)
         cprev = self.head
         fit = None
@@ -51,9 +53,8 @@ class DoublyLinkedList:
                 if fit is None:
                     fit = cur
                     continue
-                if b:
-                    if not b ^ bool(fit.size() > cur.size()):
-                        fit = cur
+                if not self.strat ^ bool(fit.size() > cur.size()):
+                    fit = cur
             cprev = cur
 
         if fit is None:
@@ -79,38 +80,6 @@ class DoublyLinkedList:
         fit.prev = new
 
         return self
-
-    def firsfit(self, p: Process) -> None:
-        new = Node(p)
-        cprev = self.head
-
-        for cur in self:
-            if cur.isHole():
-                if new.data.size < cur.data.size:
-                    cur.data.size -= new.data.size
-                    new.prev = cur.prev
-                    new.next = cur
-                    cur.prev = new
-                    if cur is self.head:
-                        self.head = new
-                    else:
-                        cprev.next = new
-                    return self
-                elif new.data.size == cur.data.size:
-                    new.next = cur.next
-                    new.prev = cur.prev
-                    if cur is self.tail:
-                        self.tail = new
-                    else:
-                        cur.next.prev = new
-                    if cur is self.head:
-                        self.head = new
-                    else:
-                        cprev.next = new
-                    return self
-            cprev = cur
-
-        raise MemoryOverflowException
 
     def __merge_neighbours(self, node: Node):
         while True:
@@ -146,39 +115,6 @@ class DoublyLinkedList:
         raise ProcessNotFoundException(pid)
 
 
-class Variable:
-    def __init__(self, memSize, fit):
-        self.memSize = memSize
-        self.fit = fit
-        self.mem = DoublyLinkedList(memSize)
-
-    def __str__(self):
-        return self.mem
-
-    def __in(self, pid: int, size: int) -> None:
-        b = True if self.fit == "bf" else False
-        p = Process(pid, size)
-        print(f"IN: {p}")
-        return self.mem.fit(p, b)
-
-    def __out(self, pid: int) -> None:
-        print(f"OUT: {pid}")
-        return self.mem.remove(pid)
-
-    def run(self, path: str) -> None:
-        with open(path) as f:
-            lines = f.readlines()
-            for line in lines:
-                if("IN" in line):
-                    pid, size = line.split("IN(", 1)[1].split(")")[
-                        0].split(",")
-                    try:
-                        print(self.__in(pid, size))
-                    except MemoryOverflowException as e:
-                        print(e)
-                else:
-                    pid = line.split("OUT(", 1)[1].split(")")[0]
-                    try:
-                        print(self.__out(pid))
-                    except ProcessNotFoundException as e:
-                        print(e)
+class Variable(MemoryManagment):
+    def __init__(self, memSize, strat):
+        self.mem = DoublyLinkedList(memSize, strat)

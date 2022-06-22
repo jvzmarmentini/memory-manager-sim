@@ -26,14 +26,14 @@ def main():
                 break
             print("!!Numero deve ser divisivel pelo tamanho da memoria")
         f = Fix(mem, part)
-        f.run("test/input.txt")
+        f.simulate("test/input.txt")
     elif(opt.lower() == "v"):
         policy = input("best fit ou worst fit [bf, wf]: ")
         v = Variable(mem, policy)
-        v.run("test/input.txt")
+        v.simulate("test/input.txt")
     elif(opt.lower() == "b"):
         b = Buddy(mem)
-        b.run("test/input.txt")
+        b.simulate("test/input.txt")
     return 0
 
 
