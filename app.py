@@ -1,18 +1,27 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import math
+from os import listdir
+from os.path import isfile, join
 from src.Buddy import Buddy
 from src.Fix import Fix
 from src.Variable import Variable
 
 
 def main():
-    file = "test/input3.txt"
+    files = [f for f in listdir("./test") if isfile(join("./test", f))]
+    while(True):
+        for cont,f in enumerate(files):
+            print("%d - %s"%(cont+1,f))
+        file = "test/"+files[int(input("Digite o arquivo que você deseja rodar: "))-1]
+        if (isfile(file)):
+            break
+        print("!!Arquivo invalido")
     while(True):
         opt = input("Estrategia de alocacao [f, v, b]: ")
         if (opt in "FfVvBb"):
             break
-        print("!!Estategia invalida")
+        print("!!Estrategia invalida")
     while(True):
         mem = int(input("Tamanho da memoria: "))
         if (math.ceil(math.log2(mem)) == math.floor(math.log2(mem))):
@@ -26,14 +35,14 @@ def main():
                 break
             print("!!Numero deve ser divisivel pelo tamanho da memoria")
         f = Fix(mem, part)
-        f.run(file)
+        f.simulate(file)
     elif(opt.lower() == "v"):
         policy = input("best fit ou worst fit [bf, wf]: ")
         v = Variable(mem, policy)
-        v.run(file)
+        v.simulate(file)
     elif(opt.lower() == "b"):
         b = Buddy(mem)
-        b.run(file)
+        b.simulate(file)
     return 0
 
 
