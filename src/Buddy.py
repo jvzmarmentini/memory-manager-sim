@@ -4,7 +4,7 @@ from utils.Colors import bc
 from utils.Exceptions import MemoryOverflowException, ProcessNotFoundException
 
 
-class Tree:
+class BinaryTree:
     def __init__(self, memSize) -> None:
         self._tree = [None] * (memSize-1)
         self._tree[0] = memSize
@@ -13,12 +13,7 @@ class Tree:
         if self._tree[k] is not None:
             if 2*k+1 < len(self._tree):
                 self.__str__(2*k+1, level+1)
-            print(level * 4 * ' ' + '-> ' + repr(self._tree[k]), end='')
-            if isinstance(self._tree[k], Process):
-                r = self._tree[0]//2 ** level-self._tree[k].size
-                print(",", f"{r}") if r else print()
-            else:
-                print()
+            print(level * 2 * ' ' + '-> ' + repr(self._tree[k]))
             if 2*k+2 < len(self._tree):
                 self.__str__(2*k+2, level+1)
         return ""
@@ -51,7 +46,7 @@ class Tree:
         return self._add(p, rightIdx)
 
     def add(self, p: Process):
-        if p.size > self._tree[0]:
+        if isinstance(self._tree[0], Process) or p.size > self._tree[0]:
             raise MemoryOverflowException
         if self._add(p, 0) is None:
             raise MemoryOverflowException
@@ -91,11 +86,13 @@ class Tree:
         return None
 
     def remove(self, pid):
-        if self._remove(pid, 0) is None:
+        if isinstance(self._tree[0], Process) and self._tree[0].pid == pid:
+            self._tree[0] = len(self._tree)+1
+        elif self._remove(pid, 0) is None:
             raise ProcessNotFoundException(pid)
         return self
 
 
 class Buddy(MemoryManagment):
     def __init__(self, memSize):
-        self.mem = Tree(memSize)
+        self.mem = BinaryTree(memSize)

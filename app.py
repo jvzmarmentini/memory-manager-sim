@@ -33,7 +33,7 @@ def main():
         v.simulate("test/input.txt")
     elif(opt.lower() == "b"):
         b = Buddy(mem)
-        b.simulate("test/input.txt")
+        b.simulate("test/input3.txt")
     return 0
 
 
