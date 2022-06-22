@@ -1,4 +1,4 @@
-from Process import Process
+from src.Process import Process
 from utils.Colors import bc
 from utils.Exceptions import MemoryOverflowException, ProcessNotFoundException
 

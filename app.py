@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import math
-from Buddy import Buddy
-from Fix import Fix
-from Variable import Variable
+from src.Buddy import Buddy
+from src.Fix import Fix
+from src.Variable import Variable
 
 
 def main():
@@ -26,14 +26,14 @@ def main():
                 break
             print("!!Numero deve ser divisivel pelo tamanho da memoria")
         f = Fix(mem, part)
-        f.run("input.txt")
+        f.run("test/input.txt")
     elif(opt.lower() == "v"):
         policy = input("best fit ou worst fit [bf, wf]: ")
         v = Variable(mem, policy)
-        v.run("input.txt")
+        v.run("test/input.txt")
     elif(opt.lower() == "b"):
         b = Buddy(mem)
-        b.run("input.txt")
+        b.run("test/input.txt")
     return 0
 
 
