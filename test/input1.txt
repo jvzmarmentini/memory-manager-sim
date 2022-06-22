@@ -1,0 +1,4 @@
+size 8
+simple in and out
+IN(A, 5)
+OUT(A)

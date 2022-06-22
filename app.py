@@ -7,7 +7,7 @@ from src.Variable import Variable
 
 
 def main():
-
+    file = "test/input3.txt"
     while(True):
         opt = input("Estrategia de alocacao [f, v, b]: ")
         if (opt in "FfVvBb"):
@@ -26,14 +26,14 @@ def main():
                 break
             print("!!Numero deve ser divisivel pelo tamanho da memoria")
         f = Fix(mem, part)
-        f.simulate("test/input.txt")
+        f.run(file)
     elif(opt.lower() == "v"):
         policy = input("best fit ou worst fit [bf, wf]: ")
         v = Variable(mem, policy)
-        v.simulate("test/input.txt")
+        v.run(file)
     elif(opt.lower() == "b"):
         b = Buddy(mem)
-        b.simulate("test/input3.txt")
+        b.run(file)
     return 0
 
 
