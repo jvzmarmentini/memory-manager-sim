@@ -1,21 +1,6 @@
 from Process import Process
 from utils.Colors import bc
-<<<<<<< HEAD
-
-import math
-
-
-class MemoryOverflowException(Exception):
-    def __init__(self):
-        super().__init__(f"{bc.FAIL}!!Espaco insuficiente de memoria{bc.ENDC}")
-=======
 from utils.Exceptions import MemoryOverflowException, ProcessNotFoundException
->>>>>>> d1fe13a37ab3cbadb178e9bbff4b12bb59467db6
-
-
-class ProcessNotFoundException(Exception):
-    def __init__(self, pid):
-        super().__init__(f"{bc.FAIL}!!PID {pid} nao encontrado{bc.ENDC}")
 
 
 class Tree:
@@ -46,7 +31,6 @@ class Tree:
     def _g(self, k):
         return not self._isLeaf(k) and self._hasChild(k)
 
-    # ! test edge cases
     def _add(self, p: Process, k: int):
         if isinstance(self._tree[k], Process):
             return None
@@ -71,7 +55,6 @@ class Tree:
             raise MemoryOverflowException
         return self
 
-    # ! test edge cases
     def _remove(self, pid, k):
         if isinstance(self._tree[k], Process):
             if self._tree[k].pid == pid:
