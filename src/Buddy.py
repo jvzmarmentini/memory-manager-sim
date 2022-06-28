@@ -99,6 +99,7 @@ class BinaryTree:
     def remove(self, pid):
         if isinstance(self._tree[0], Process) and self._tree[0].pid == pid:
             self._tree[0] = len(self._tree)+1
+            self._infrag = list(filter(lambda t: t[0] != pid, self._infrag))
         elif self._remove(pid, 0) is None:
             raise ProcessNotFoundException(pid)
         return self
