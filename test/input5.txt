@@ -1,0 +1,38 @@
+test buddy internal fragmentation size 16
+add only process
+IN(A, 9)
+IN(B, 7)
+OUT(A)
+test minimal size of node
+IN(B, 1)
+insert remove and reuse node
+IN(C, 6)
+OUT(C)
+IN(D, 8)
+occupy all memory
+IN(E, 4)
+IN(F, 2)
+test size
+IN(G, 2)
+OUT(B)
+OUT(F)
+OUT(E)
+OUT(D)
+split, add, remove, merge, add
+IN(X, 8)
+IN(A, 4)
+IN(B, 4)
+OUT(A)
+OUT(B)
+IN(C, 8)
+insert in left branch with right occupied
+OUT(X)
+IN(W, 2)
+IN(X, 2)
+IN(Y, 2)
+IN(Z, 2)
+OUT(W)
+OUT(X)
+OUT(Y)
+OUT(Z)
+OUT(C)
