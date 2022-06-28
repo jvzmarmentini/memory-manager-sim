@@ -1,0 +1,43 @@
+variable merge test size 16
+IN(A, 2)
+IN(B, 2)
+IN(C, 2)
+IN(D, 2)
+IN(E, 2)
+IN(F, 2)
+IN(G, 2)
+IN(H, 2)
+merge in the middle
+OUT(D)
+OUT(E)
+merge in head, head first
+OUT(A)
+OUT(B)
+IN(A, 2)
+IN(B, 2)
+merge in head, head last
+OUT(B)
+OUT(A)
+merge 3 nodes in head
+OUT(C)
+IN(A, 2)
+IN(B, 2)
+IN(C, 2)
+IN(D, 2)
+IN(E, 2)
+merge in tail, head first
+OUT(H)
+OUT(G)
+IN(G, 2)
+IN(H, 2)
+merge in tail, head last
+OUT(G)
+OUT(H)
+merge 3 nodes in tail
+OUT(E)
+OUT(F)
+merge all
+OUT(A)
+OUT(B)
+OUT(C)
+OUT(D)
