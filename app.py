@@ -38,7 +38,11 @@ def main():
         f = Fix(mem, part)
         f.simulate(file)
     elif(opt.lower() == "v"):
-        policy = input("best fit ou worst fit [bf, wf]: ")
+        while(True):
+            policy = input("best fit ou worst fit [bf, wf]: ")
+            if (policy.lower() in "bfwf"):
+                break
+            print("!!Opcao invalida")
         v = Variable(mem, policy)
         v.simulate(file)
     elif(opt.lower() == "b"):
