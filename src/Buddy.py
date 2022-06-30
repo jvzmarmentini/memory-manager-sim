@@ -89,6 +89,8 @@ class BinaryTree:
             res = self._remove(pid, rightIdx)
             if res is not None:
                 if res:
+                    self._infrag = list(
+                        filter(lambda t: t[0] != pid, self._infrag))
                     if not isinstance(self._tree[leftIdx], Process) and self._isFit(2*k+1):
                         self._tree[rightIdx] = self._tree[leftIdx] = None
                         return True
