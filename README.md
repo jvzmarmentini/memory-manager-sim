@@ -2,6 +2,10 @@
 
 simulador do gerenciador de memoria do sisop. foram implementadas tres estrategias de alocação, sendo elas partição fixa, partição variável e buddy.
 
+@author: Gabriel R. Panho
+@author: Joao V. Z. Marmentini
+@author: Tobias Trein
+
 ## python version
 
 Python 3.10.5
@@ -18,4 +22,4 @@ para adicionar um processo na memoria, insira conforme o padrão (case sensitive
 para remover um processo da memoria, insira conforme o padrão (case sensitive):
 "OUT(PID)"
 
-run `python app.py`
+run `python ./app.py`
